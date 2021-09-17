@@ -33,7 +33,7 @@ static int	contador(char const *b, char const *c)
 		//printf("Con c %c\n", c[ii]);
 		ii++;
 	}
-	t = i + ii;
+	t = i + ii + 1;
 	return (t);
 }
 
@@ -54,7 +54,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 		a[j++] = s1[i++];
 	while (s2 && s2[ii] != '\0')
 		a[j++] = s2[ii++];
-	//a[j] = '\0';
+	a[j] = '\0';
 	return (a);
 }
 
@@ -68,13 +68,16 @@ char	*read_line(char *s, int c)
 		return (NULL);
 	while (s[i] != c)
 		i++;
-	strg = (char *) malloc(i * sizeof(char));
+	strg = (char *) malloc(i + 2 * sizeof(char));
 	i = 0;
 	while (s[i] != c)
 	{
 		strg[i] = s[i];
 		i++;
 	}
+	strg[i++] = c;
+	strg[i] = '\0';
+	free(s);
 	return (strg);
 }
 
@@ -100,20 +103,54 @@ int	ft_strchr(const char *s, int c)
 	return (0);
 }
 
-char *line(int fd, char *s)
+size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
+{
+	size_t			i;
+	unsigned char	*a;
+	unsigned char	*b;
+
+	a = (unsigned char *) src;
+	b = (unsigned char *) dst;
+	i = 0;
+	if ((a == NULL) && (dstsize == '\0'))
+		return (0);
+	while ((i + 1 < dstsize) && (a[i] != '\0'))
+	{
+		b[i] = a[i];
+		i++;
+	}
+	if ((dstsize != 0) && (b != NULL) && ((i + 1 == dstsize) || (a[i] == '\0')))
+		b[i] = '\0';
+	while (a[i] != '\0')
+		i++;
+	return (i);
+}
+
+char	*line(int fd, char *s)
 {
 	static char 	c[6];
 	char	*aux;
+	static int		i;
+	ssize_t			j;
 
 	//c[5] = '\0';
+	//printf("entrada C:%s\n", c);
+	ft_strlcpy(c, c + i, 5);
+	//printf("saida C:%s\n", c);
+	s = ft_strjoin(s, c);
 	while(!ft_strchr(s, '\n'))
 	{
-		read(fd, c, 5);
+		j = read(fd, c, 5);
+		if (j < 0)
+			return(free(s), NULL);
+		c[j] = '\0';
 		aux = s;
 		s = ft_strjoin(aux, c);
 		free(aux);
 		//printf("S:%s Tes: %zu C: %s\n", s, tes, c);
 	}
+	i = ft_strchr(c, '\n') + 1;
+	//printf("Place: %i\n", i); 
 	return (read_line(s, '\n'));
 }
 
@@ -128,17 +165,17 @@ int main ()
 	printf("RESULTADO1:%s\n", get_next_line(a));
 	printf("RESULTADO2:%s\n", get_next_line(a));
 	printf("RESULTADO3:%s\n", get_next_line(a));
-	//printf("RESULTADO4:%s\n", get_next_line(a));
-	//printf("RESULTADO5:%s\n", get_next_line(a));
-	//printf("RESULTADO6:%s\n", get_next_line(a));
-	//printf("RESULTADO7:%s\n", get_next_line(a));
-	//printf("RESULTADO8:%s\n", get_next_line(a));
-	//printf("RESULTADO9:%s\n", get_next_line(a));
-	//printf("RESULTADO10:%s\n", get_next_line(a));
-	//printf("RESULTADO11:%s\n", get_next_line(a));
-	//printf("RESULTADO12:%s\n", get_next_line(a));
-	//printf("RESULTADO13:%s\n", get_next_line(a));
-	//printf("RESULTADO14:%s\n", get_next_line(a));
-	//printf("RESULTADO15:%s\n", get_next_line(a));
+	printf("RESULTADO4:%s\n", get_next_line(a));
+	printf("RESULTADO5:%s\n", get_next_line(a));
+	printf("RESULTADO6:%s\n", get_next_line(a));
+	printf("RESULTADO7:%s\n", get_next_line(a));
+	printf("RESULTADO8:%s\n", get_next_line(a));
+	printf("RESULTADO9:%s\n", get_next_line(a));
+	printf("RESULTADO10:%s\n", get_next_line(a));
+	printf("RESULTADO11:%s\n", get_next_line(a));
+	printf("RESULTADO12:%s\n", get_next_line(a));
+	printf("RESULTADO13:%s\n", get_next_line(a));
+	printf("RESULTADO14:%s\n", get_next_line(a));
+	printf("RESULTADO15:%s\n", get_next_line(a));
 	return (0);
 }
