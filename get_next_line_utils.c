@@ -60,17 +60,19 @@ char	*ft_strjoin(char const *s1, char const *s2)
 
 char	*read_line(char *s, int c)
 {
-	char				*strg;
+	char		*strg;
 	int			i;
 
 	i = 0;
 	if (!s)
 		return (NULL);
-	while (s[i] != c)
+	while (s[i] != c && s[i] != '\0')
 		i++;
 	strg = (char *) malloc(i + 2 * sizeof(char));
+	if (!strg)
+		return (NULL);
 	i = 0;
-	while (s[i] != c)
+	while (s[i] != c && s[i] != '\0')
 	{
 		strg[i] = s[i];
 		i++;
@@ -94,12 +96,14 @@ int	ft_strchr(const char *s, int c)
 		return(0);
 	while (a[i] != '\0')
 	{
+		//if (a[0] == b)
+			//return(i);
 		if (a[i] == b)
-			return (i);
+			return (i + 1);
 		i++;
 	}
 	if (b == '\0')
-		return (i);
+		return (i + 1);
 	return (0);
 }
 
@@ -123,7 +127,7 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
 		b[i] = '\0';
 	while (a[i] != '\0')
 		i++;
-	return (i);
+	return (0);
 }
 
 char	*line(int fd, char *s)
@@ -141,15 +145,20 @@ char	*line(int fd, char *s)
 	while(!ft_strchr(s, '\n'))
 	{
 		j = read(fd, c, 5);
-		if (j < 0)
+		if (j <= 0 && i > 0)
 			return(free(s), NULL);
+		if (j == 0)
+		{
+			i++;
+			return(read_line(s, '\n'));
+		}
 		c[j] = '\0';
 		aux = s;
 		s = ft_strjoin(aux, c);
 		free(aux);
 		//printf("S:%s Tes: %zu C: %s\n", s, tes, c);
 	}
-	i = ft_strchr(c, '\n') + 1;
+	i = ft_strchr(c, '\n'); 
 	//printf("Place: %i\n", i); 
 	return (read_line(s, '\n'));
 }
@@ -168,14 +177,5 @@ int main ()
 	printf("RESULTADO4:%s\n", get_next_line(a));
 	printf("RESULTADO5:%s\n", get_next_line(a));
 	printf("RESULTADO6:%s\n", get_next_line(a));
-	printf("RESULTADO7:%s\n", get_next_line(a));
-	printf("RESULTADO8:%s\n", get_next_line(a));
-	printf("RESULTADO9:%s\n", get_next_line(a));
-	printf("RESULTADO10:%s\n", get_next_line(a));
-	printf("RESULTADO11:%s\n", get_next_line(a));
-	printf("RESULTADO12:%s\n", get_next_line(a));
-	printf("RESULTADO13:%s\n", get_next_line(a));
-	printf("RESULTADO14:%s\n", get_next_line(a));
-	printf("RESULTADO15:%s\n", get_next_line(a));
 	return (0);
 }
