@@ -10,12 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
+#include "get_next_line.h"
 
 static int	contador(char const *b, char const *c)
 {
@@ -29,10 +24,7 @@ static int	contador(char const *b, char const *c)
 	while (b && b[i] != '\0')
 		i++;
 	while (c && c[ii] != '\0')
-	{
-		//printf("Con c %c\n", c[ii]);
 		ii++;
-	}
 	t = i + ii + 1;
 	return (t);
 }
@@ -92,12 +84,10 @@ int	ft_strchr(const char *s, int c)
 	a = (char *) s;
 	b = c;
 	i = 0;
-	if (!a) 
-		return(0);
+	if (!a)
+		return (0);
 	while (a[i] != '\0')
 	{
-		//if (a[0] == b)
-			//return(i);
 		if (a[i] == b)
 			return (i + 1);
 		i++;
@@ -127,55 +117,5 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
 		b[i] = '\0';
 	while (a[i] != '\0')
 		i++;
-	return (0);
-}
-
-char	*line(int fd, char *s)
-{
-	static char 	c[6];
-	char	*aux;
-	static int		i;
-	ssize_t			j;
-
-	//c[5] = '\0';
-	//printf("entrada C:%s\n", c);
-	ft_strlcpy(c, c + i, 5);
-	//printf("saida C:%s\n", c);
-	s = ft_strjoin(s, c);
-	while(!ft_strchr(s, '\n'))
-	{
-		j = read(fd, c, 5);
-		if (j <= 0 && i > 0)
-			return(free(s), NULL);
-		if (j == 0)
-		{
-			i++;
-			return(read_line(s, '\n'));
-		}
-		c[j] = '\0';
-		aux = s;
-		s = ft_strjoin(aux, c);
-		free(aux);
-		//printf("S:%s Tes: %zu C: %s\n", s, tes, c);
-	}
-	i = ft_strchr(c, '\n'); 
-	//printf("Place: %i\n", i); 
-	return (read_line(s, '\n'));
-}
-
-char	*get_next_line(int fd)
-{
-	//printf("I: %i LP: %i\n", i, last_position);
-	return (line(fd, NULL));
-}
-int main ()
-{
-	int a = open("teste.txt", O_RDONLY | O_EXCL);
-	printf("RESULTADO1:%s\n", get_next_line(a));
-	printf("RESULTADO2:%s\n", get_next_line(a));
-	printf("RESULTADO3:%s\n", get_next_line(a));
-	printf("RESULTADO4:%s\n", get_next_line(a));
-	printf("RESULTADO5:%s\n", get_next_line(a));
-	printf("RESULTADO6:%s\n", get_next_line(a));
 	return (0);
 }
