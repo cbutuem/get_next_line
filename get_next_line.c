@@ -20,21 +20,20 @@ char	*line(int fd, char *s)
 	ssize_t			j;
 
 	ft_strlcpy(c, c + i, BUFFER_SIZE);
-	s = ft_strjoin(aux, c);
-	while (!ft_strchr(s, '\n'))
+	s = ft_strjoin(s, c);
+	while (!ft_strchr(c, '\n'))
 	{
 		j = read(fd, c, BUFFER_SIZE);
-		if (j <= 0 && i > 0)
+		if (j <= 0 && *s == '\0')
 			return (free(s), NULL);
+		c[j] = '\0';
 		if (j == 0)
 		{
-			i++;
+			i = 0;
 			return (read_line(s, '\n'));
 		}
-		c[j] = '\0';
 		aux = s;
 		s = ft_strjoin(aux, c);
-		free(aux);
 	}
 	i = ft_strchr(c, '\n');
 	return (read_line(s, '\n'));
@@ -42,5 +41,7 @@ char	*line(int fd, char *s)
 
 char	*get_next_line(int fd)
 {
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (NULL);
 	return (line(fd, NULL));
 }

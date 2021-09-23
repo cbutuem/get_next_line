@@ -29,7 +29,7 @@ static int	contador(char const *b, char const *c)
 	return (t);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin(char *s1, char *s2)
 {
 	int		i;
 	int		ii;
@@ -47,6 +47,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	while (s2 && s2[ii] != '\0')
 		a[j++] = s2[ii++];
 	a[j] = '\0';
+	free(s1);
 	return (a);
 }
 
@@ -69,7 +70,8 @@ char	*read_line(char *s, int c)
 		strg[i] = s[i];
 		i++;
 	}
-	strg[i++] = c;
+	if (ft_strchr(s, '\n'))
+		strg[i++] = c;
 	strg[i] = '\0';
 	free(s);
 	return (strg);
